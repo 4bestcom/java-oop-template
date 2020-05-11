@@ -21,10 +21,12 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
         int index = 0;
         SchoolBook[] schoolBooksTemp = new SchoolBook[count()];
         for (SchoolBook schoolBook : schoolBooks) {
-            String findName = schoolBook.getName();
-            if (findName.equals(name)) {
-                schoolBooksTemp[index] = schoolBook;
-                index++;
+            if (schoolBook != null) {
+                String findName = schoolBook.getName();
+                if (findName.equals(name)) {
+                    schoolBooksTemp[index] = schoolBook;
+                    index++;
+                }
             }
         }
         if (index == 0) {
@@ -45,12 +47,15 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
                 schoolBooks[i] = null;
             }
         }
-        SchoolBook[] schoolBookNew = new SchoolBook[schoolBooks.length - findByName(name).length];
+        SchoolBook[] schoolBookNew = new SchoolBook[schoolBooks.length - findByName(name).length-2];
         int index = 0;
-        for (int i = 0; i < schoolBookNew.length; i++) {
-            if (schoolBooks[i] == null && (index < schoolBooks.length)) {
+        for (int i = 0; i < schoolBooks.length; i++) { // переделать логику, слишком путанная
+            if (schoolBooks[i] == null && index < schoolBookNew.length) {
                 schoolBookNew[i] = schoolBooks[++index];
             } else {
+                if (index >=schoolBookNew.length){
+                    break;
+                }
                 schoolBookNew[i] = schoolBooks[index];
             }
             index++;

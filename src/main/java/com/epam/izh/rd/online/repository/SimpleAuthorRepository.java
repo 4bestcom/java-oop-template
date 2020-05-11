@@ -8,7 +8,7 @@ public class SimpleAuthorRepository implements AuthorRepository {
 
     @Override
     public boolean save(Author author) {
-        if (findByFullName(author.getName(), author.getLastName()) == null) {
+        if (findByFullName(author.getName(), author.getLastName()) != null) {
             return false;
         }
         Author[] authorsNew = new Author[count() + 1]; //проверить count
@@ -42,10 +42,13 @@ public class SimpleAuthorRepository implements AuthorRepository {
         }
         Author[] authorsNew = new Author[count() - 1];
         int index = 0;
-        for (int i = 0; i < authors.length; i++) {
-            if (authors[i] == null && (index < authors.length)) {
+        for (int i = 0; i < authors.length; i++) { // переделать логику, слишком путанная
+            if (authors[i] == null && (index < authorsNew.length)) {
                 authorsNew[i] = authors[++index];
             } else {
+                if (index >=authorsNew.length){
+                    break;
+                }
                 authorsNew[i] = authors[index];
             }
             index++;
