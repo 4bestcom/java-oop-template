@@ -31,10 +31,11 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
         }
         if (index == 0) {
             return new SchoolBook[0];
+        } else {
+            SchoolBook[] schoolBooksFind = new SchoolBook[index];
+            System.arraycopy(schoolBooksTemp, 0, schoolBooksFind, 0, index);
+            return schoolBooksFind;
         }
-        SchoolBook[] schoolBooksFind = new SchoolBook[index];
-        System.arraycopy(schoolBooksTemp, 0, schoolBooksFind, 0, index);
-        return schoolBooksFind;
     }
 
     @Override
@@ -42,23 +43,14 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
         if (findByName(name).length == 0) {
             return false;
         }
-        for (int i = 0; i < schoolBooks.length; i++) {
-            if (schoolBooks[i].getName().equals(name)) {
-                schoolBooks[i] = null;
-            }
-        }
-        SchoolBook[] schoolBookNew = new SchoolBook[schoolBooks.length - findByName(name).length-2];
-        int index = 0;
-        for (int i = 0; i < schoolBooks.length; i++) { // переделать логику, слишком путанная
-            if (schoolBooks[i] == null && index < schoolBookNew.length) {
-                schoolBookNew[i] = schoolBooks[++index];
+        SchoolBook[] schoolBookNew = new SchoolBook[count() - findByName(name).length];
+        for (int i = 0, j = 0; i < schoolBookNew.length; i++, j++) {
+            if (schoolBooks[j].getName().equals(name)) {
+                i--;
+                j++;
             } else {
-                if (index >=schoolBookNew.length){
-                    break;
-                }
-                schoolBookNew[i] = schoolBooks[index];
+                schoolBookNew[i] = schoolBooks[j];
             }
-            index++;
         }
         schoolBooks = schoolBookNew;
         return true;

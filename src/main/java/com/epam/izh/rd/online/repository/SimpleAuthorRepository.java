@@ -11,7 +11,7 @@ public class SimpleAuthorRepository implements AuthorRepository {
         if (findByFullName(author.getName(), author.getLastName()) != null) {
             return false;
         }
-        Author[] authorsNew = new Author[count() + 1]; //проверить count
+        Author[] authorsNew = new Author[count() + 1];
         System.arraycopy(authors, 0, authorsNew, 0, count());
         authorsNew[count()] = author;
         authors = authorsNew;
@@ -35,23 +35,14 @@ public class SimpleAuthorRepository implements AuthorRepository {
         if (findByFullName(author.getName(), author.getLastName()) == null) {
             return false;
         }
-        for (int i = 0; i < authors.length; i++) {
-            if (authors[i].getName().equals(author.getName()) && authors[i].getLastName().equals(author.getLastName())) {
-                authors[i] = null;
-            }
-        }
         Author[] authorsNew = new Author[count() - 1];
-        int index = 0;
-        for (int i = 0; i < authors.length; i++) { // переделать логику, слишком путанная
-            if (authors[i] == null && (index < authorsNew.length)) {
-                authorsNew[i] = authors[++index];
+        for (int i = 0, j = 0; i < authorsNew.length; i++, j++) {
+            if (authors[i].getName().equals(author.getName()) && authors[i].getLastName().equals(author.getLastName())) {
+                i--;
+                j++;
             } else {
-                if (index >=authorsNew.length){
-                    break;
-                }
-                authorsNew[i] = authors[index];
+                authorsNew[i] = authors[j];
             }
-            index++;
         }
         authors = authorsNew;
         return true;
